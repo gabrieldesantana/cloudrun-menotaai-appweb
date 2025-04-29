@@ -1,0 +1,194 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Visitantes";
+}
+<style>
+    .container-index-visitantes 
+    {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .form-visitantes
+    {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    }
+
+    .table-visitantes
+    {
+        margin-top: 20px;
+    }
+
+    .table-visitantes th
+    {
+        color: #fff;
+    }
+
+    .table-visitantes thead,
+    .table-visitantes tbody
+    {
+        text-align: center;
+    }
+
+    .container-index-visitantes-mensagens 
+    {
+    display: inline;
+    position: absolute;
+    top: 2vh;
+    right: 2vw;
+    }
+
+    .container-index-visitantes-serverinfo 
+    {
+        font-size: 0.9rem;
+        padding: 1rem;
+        border: 1px solid black;
+    }
+
+    @@media (max-width: 40rem)
+    {
+    .container-index-visitantes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10vh;
+    }
+
+    .container-index-visitantes-mensagens {
+    position: absolute;
+        top: 1vh;
+        left: 2.5vw;
+        right: 2.5vw;
+    }
+    }
+
+    .button-66 {
+    background-color: #0a6bff;
+    border-radius: 4px;
+    border: 0;
+    box-shadow: rgba(1,60,136,.5) 0 -1px 3px 0 inset,rgba(0,44,97,.1) 0 3px 6px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inherit;
+    font-family: "Space Grotesk",-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 24px;
+    margin: 0;
+    min-height: 56px;
+    min-width: 120px;
+    padding: 16px 20px;
+    position: relative;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    transition: all .2s cubic-bezier(.22, .61, .36, 1);
+    }
+
+    .button-66:hover {
+    background-color: #065dd8;
+    transform: translateY(-2px);
+    }
+
+    @@media (min-width: 768px) {
+    .button-66
+    {
+    padding: 16px 44px;
+    min-width: 150px;
+    }
+
+    }
+
+</style>
+
+<div class="container-index-visitantes">
+
+    <div class="container-index-visitantes-mensagens">
+        @if (TempData["MensagemSucesso"] != null || TempData["MensagemErro"] != null)
+        {
+            var mensagemSucessoParte1 = TempData["MensagemSucesso"];
+            var mensagemSucessoParte2 = "você foi notado com sucesso!";
+            var mensagemErro = TempData["MensagemErro"];
+            if (mensagemSucessoParte1 != null)
+            {
+                <div class="alert alert-success button-success text-center" role="alert" id="success-message">
+                    @mensagemSucessoParte1 <br>
+                    @mensagemSucessoParte2
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </div>
+            }
+            else if (mensagemErro != null)
+            {
+                <div class="alert alert-danger button-danger text-center" role="alert" id="error-message">
+                    @mensagemErro
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </div>
+            }
+        }
+
+    </div>
+
+    <form method="post" class="form-visitantes">
+        <div class="form-group classe">
+            <label asp-for="VisitanteModel.Nome" class="control-label">Informe o seu nome</label>
+            <input asp-for="VisitanteModel.Nome" class="form-control" />
+        </div>
+
+        <div class="form-group d-grid">
+            <button class="button-66" role="button">Tô aqui!</button>
+        </div>
+
+    </form>
+
+    <table class="table table-bordered table-visitantes">
+        <thead>
+            <tr>
+                <th class="bg-primary">
+                    Data da Visita
+                </th>
+                <th class="bg-primary">
+                    Nome do Visitante
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Response)
+            {
+                <tr>
+                    <td>
+                        @item.DataVisita.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="container-index-visitantes-serverinfo">
+        <h4>Informações do Servidor</h4>
+        <p>Host: @HttpContext.Request.Host.Value</p>
+        <p>Region: @Environment.GetEnvironmentVariable("CLOUD_RUN_REGION")</p>
+        <p>Service: @Environment.GetEnvironmentVariable("K_SERVICE")</p>
+        <p>Revision: @Environment.GetEnvironmentVariable("K_REVISION")</p>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(e) {
+            SetTimeToMessages();
+    });
+
+        function SetTimeToMessages() {
+            setTimeout(() => document.getElementById("success-message").style.display = "none", 3000)
+            setTimeout(() => document.getElementById("error-message").style.display = "none", 2000)
+        }
+</script>

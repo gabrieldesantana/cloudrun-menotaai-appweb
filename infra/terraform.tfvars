@@ -1,0 +1,7 @@
+project_id   = "seu-project-id" 
+region       = "sua-regiao" 
+db_user      = "postgres" 
+db_password  = "sua-senha" 
+db_name      = "nome-da-baseDeDados"
+app_image_name_with_tag = "imagem-docker:latest"
+app_name = "nome-da-aplicacao"
